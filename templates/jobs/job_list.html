@@ -23,7 +23,7 @@
         {% if request.GET.category %}
         <input type="hidden" name="category" value="{{ request.GET.category }}">
         {% endif %}
-        <button type="submit" class="btn-search">Search Jobs</button>
+        <button type="submit" class="btn-search">Search</button>
     </form>
 </div>
 
@@ -36,43 +36,75 @@
     </div>
 </div>
 
-<div class="job-board-container">
-    <div class="job-list-column">
-        <div class="list-header">
-            <h2>{{ jobs|length }} Jobs Found</h2>
-            <select class="sort-select">
-                <option>Sort by: Most Recent</option>
-                <option>Sort by: Relevance</option>
-            </select>
+<div class="dashboard-container">
+    <!-- State-wise Browse Section -->
+    <section class="state-wise-section">
+        <h3>Browse State-wise Govt Jobs</h3>
+        <div class="state-grid">
+            <a href="{% url 'jobs:list' %}?q=AP" class="state-pill">AP (Andhra Pradesh)</a>
+            <a href="{% url 'jobs:list' %}?q=MH" class="state-pill">MH (Maharashtra)</a>
+            <a href="{% url 'jobs:list' %}?q=UP" class="state-pill">UP (Uttar Pradesh)</a>
+            <a href="{% url 'jobs:list' %}?q=DL" class="state-pill">DL (Delhi)</a>
+            <a href="{% url 'jobs:list' %}?q=KA" class="state-pill">KA (Karnataka)</a>
+            <a href="{% url 'jobs:list' %}?q=TN" class="state-pill">TN (Tamil Nadu)</a>
+            <a href="{% url 'jobs:list' %}?q=TS" class="state-pill">TS (Telangana)</a>
+            <a href="{% url 'jobs:list' %}?q=WB" class="state-pill">WB (West Bengal)</a>
+            <a href="{% url 'jobs:list' %}?q=BR" class="state-pill">BR (Bihar)</a>
+            <a href="{% url 'jobs:list' %}?q=RJ" class="state-pill">RJ (Rajasthan)</a>
+        </div>
+    </section>
+
+    <!-- 3 Column Dashboard -->
+    <div class="three-column-grid">
+        <!-- Column 1: Latest Notifications -->
+        <div class="dash-column">
+            <div class="col-header bg-blue">
+                <h3>Latest Notifications</h3>
+            </div>
+            <ul class="dash-list">
+                {% for job in latest_notifications %}
+                <li>
+                    <a href="{% url 'jobs:detail' job.pk %}">{{ job.title }}</a>
+                    <span class="post-date">{{ job.posted_at|timesince }} ago</span>
+                </li>
+                {% empty %}
+                <li class="empty-msg">No new notifications.</li>
+                {% endfor %}
+            </ul>
+        </div>
+        
+        <!-- Column 2: Admit Cards & Results -->
+        <div class="dash-column">
+            <div class="col-header bg-green">
+                <h3>Admit Cards & Results</h3>
+            </div>
+            <ul class="dash-list">
+                {% for job in admit_cards_results %}
+                <li>
+                    <a href="{% url 'jobs:detail' job.pk %}">{{ job.title }}</a>
+                    <span class="post-date">{{ job.posted_at|timesince }} ago</span>
+                </li>
+                {% empty %}
+                <li class="empty-msg">No recent admit cards or results.</li>
+                {% endfor %}
+            </ul>
         </div>
 
-        <div class="job-list">
-            {% for job in jobs %}
-            <div class="job-list-card">
-                <div class="job-card-main">
-                    <div class="job-card-header">
-                        <h2 class="job-title-link"><a href="{% url 'jobs:detail' job.pk %}">{{ job.title }}</a></h2>
-                        <span class="job-category-badge">{{ job.category.name }}</span>
-                    </div>
-                    <div class="job-company">{{ job.company_name|default:"Confidential" }}</div>
-                    <div class="job-meta-row">
-                        <span class="meta-item">Location: {{ job.location }}</span>
-                        <span class="meta-item">Vacancies: {{ job.vacancies }}</span>
-                        <span class="meta-item">Posted: {{ job.posted_at|timesince }} ago</span>
-                    </div>
-                    <div class="job-snippet">
-                        {{ job.description|striptags|truncatechars:180 }}
-                    </div>
-                </div>
-                <div class="job-card-actions">
-                    <a href="{% url 'jobs:detail' job.pk %}" class="btn-view-job">View Job Details</a>
-                </div>
+        <!-- Column 3: Tech & Private Jobs -->
+        <div class="dash-column">
+            <div class="col-header bg-purple">
+                <h3>Top Private & Tech Jobs</h3>
             </div>
-            {% empty %}
-            <div class="empty-state">
-                <p>No jobs found for this category right now. Check back tomorrow!</p>
-            </div>
-            {% endfor %}
+            <ul class="dash-list">
+                {% for job in private_jobs %}
+                <li>
+                    <a href="{% url 'jobs:detail' job.pk %}">{{ job.title }}</a>
+                    <span class="post-date">{{ job.company_name }}</span>
+                </li>
+                {% empty %}
+                <li class="empty-msg">No private jobs found.</li>
+                {% endfor %}
+            </ul>
         </div>
     </div>
 </div>

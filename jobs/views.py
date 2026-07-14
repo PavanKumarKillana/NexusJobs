@@ -24,12 +24,19 @@ def job_list(request):
             Q(company_name__icontains=search_query)
         )
 
+    # Dashboard logic
+    latest_notifications = jobs.exclude(title__icontains='Admit Card').exclude(title__icontains='Result').exclude(title__icontains='Answer Key')[:15]
+    admit_cards_results = jobs.filter(Q(title__icontains='Admit Card') | Q(title__icontains='Result') | Q(title__icontains='Answer Key'))[:15]
+    private_jobs = jobs.exclude(category__name='Government Jobs')[:15]
         
     context = {
         'jobs': jobs,
+        'latest_notifications': latest_notifications,
+        'admit_cards_results': admit_cards_results,
+        'private_jobs': private_jobs,
         'categories': categories,
         'selected_category': category_slug,
-        'highlights': highlights
+        'highlights': highlights,
     }
     return render(request, 'jobs/job_list.html', context)
 
