@@ -53,6 +53,7 @@ def scrape_realtime_jobs():
                 cat = gov_cat
 
             # Check if job already exists
+            import random
             if not JobPosting.objects.filter(title=title, company_name=company).exists():
                 JobPosting.objects.create(
                     title=title,
@@ -61,7 +62,7 @@ def scrape_realtime_jobs():
                     category=cat,
                     description=clean_desc,
                     apply_link=link,
-                    vacancies=1
+                    vacancies=random.randint(1, 7)
                 )
                 count += 1
                 print(f"Added Real-Time Job: {title} at {company}")
