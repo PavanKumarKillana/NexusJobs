@@ -5,10 +5,10 @@
 {% block content %}
 {% if highlights %}
 <div class="scrolling-ticker">
-    <div class="ticker-label">📢 LATEST UPDATES:</div>
+    <div class="ticker-label">LATEST UPDATES:</div>
     <marquee behavior="scroll" direction="left" scrollamount="6">
         {% for h in highlights %}
-        <span class="ticker-item"><a href="{% url 'jobs:detail' h.pk %}">🌟 {{ h.title }} ({{ h.category.name }})</a></span>
+        <span class="ticker-item"><a href="{% url 'jobs:detail' h.pk %}" class="ticker-link">{{ h.title }} ({{ h.category.name }})</a></span>
         {% endfor %}
     </marquee>
 </div>
@@ -65,16 +65,16 @@
                     </div>
                     <div class="job-company">{{ job.company_name|default:"Confidential" }}</div>
                     <div class="job-meta-row">
-                        <span>📍 {{ job.location }}</span>
-                        <span>👥 {{ job.vacancies }} Vacanc{{ job.vacancies|pluralize:"y,ies" }}</span>
-                        <span>🕒 {{ job.posted_at|timesince }} ago</span>
+                        <span class="meta-item">Location: {{ job.location }}</span>
+                        <span class="meta-item">Vacancies: {{ job.vacancies }}</span>
+                        <span class="meta-item">Posted: {{ job.posted_at|timesince }} ago</span>
                     </div>
                     <div class="job-snippet">
                         {{ job.description|striptags|truncatechars:180 }}
                     </div>
                 </div>
                 <div class="job-card-actions">
-                    <a href="{% url 'jobs:detail' job.pk %}" class="btn-view-job">View Job</a>
+                    <a href="{% url 'jobs:detail' job.pk %}" class="btn-view-job">View Job Details</a>
                 </div>
             </div>
             {% empty %}
