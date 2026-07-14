@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}NextGen Job Portal{% endblock %}</title>
+    <meta name="description" content="A single daily job post platform for different genres. Find your next opportunity today.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="{% url 'jobs:list' %}">NexusJobs</a>
+        </div>
+        <nav>
+            <a href="{% url 'jobs:list' %}" style="margin-right: 1.5rem;">All Jobs</a>
+            <!-- Could add AI features here or login -->
+        </nav>
+    </header>
+
+    <main class="container">
+        {% block content %}
+        {% endblock %}
+    </main>
+</body>
+</html>

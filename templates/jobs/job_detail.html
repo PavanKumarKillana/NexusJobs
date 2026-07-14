@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block title %}{{ job.title }} | NexusJobs{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+    <div class="detail-header">
+        <div class="job-category" style="font-size: 1rem; margin-bottom: 1rem;">
+            {{ job.category.name }}
+        </div>
+        <h1>{{ job.title }}</h1>
+        <div class="detail-meta">
+            <span>
+                <strong>Company:</strong> {{ job.company_name|default:"Not specified" }}
+            </span>
+            <span>
+                <strong>Location:</strong> {{ job.location }}
+            </span>
+            <span>
+                <strong>Vacancies:</strong> {{ job.vacancies }}
+            </span>
+            <span>
+                <strong>Posted:</strong> {{ job.posted_at|timesince }} ago
+            </span>
+        </div>
+    </div>
+    
+    <div class="detail-body">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem; margin-top: 2rem;">
+            <h2 style="margin: 0;">Job Description</h2>
+            <button id="ai-summarize-btn" class="btn-apply" style="background: linear-gradient(45deg, #8b5cf6, #ec4899); padding: 0.5rem 1rem; font-size: 0.9rem;">
+                ✨ AI Summary
+            </button>
+        </div>
+        
+        <div id="ai-summary-box" style="display: none; background: rgba(139, 92, 246, 0.1); border-left: 4px solid #8b5cf6; padding: 1rem; margin-bottom: 1.5rem; border-radius: 4px;">
+            <strong style="color: #c4b5fd;">AI Insights:</strong>
+            <div id="ai-summary-content" style="margin-top: 0.5rem; color: #f8fafc; white-space: pre-line;"></div>
+        </div>
+
+        <p>{{ job.description|linebreaksbr }}</p>
+    </div>
+    
+    <div class="action-bar">
+        {% if job.apply_link %}
+        <a href="{{ job.apply_link }}" target="_blank" class="btn-apply" style="flex-grow: 1;">Apply Now</a>
+        {% endif %}
+        <a href="{% url 'jobs:list' %}" class="btn-apply btn-secondary" {% if not job.apply_link %}style="flex-grow: 1;"{% endif %}>Back to Jobs</a>
+    </div>
+</div>
+
+<script>
+document.getElementById('ai-summarize-btn').addEventListener('click', function() {
+    const btn = this;
+    const box = document.getElementById('ai-summary-box');
+    const content = document.getElementById('ai-summary-content');
+    
+    btn.innerHTML = '⏳ Generating...';
+    btn.disabled = true;
+    
+    fetch('{% url "jobs:ai_summary" job.pk %}')
+        .then(response => response.json())
+        .then(data => {
+            box.style.display = 'block';
+            content.innerText = data.summary;
+            btn.innerHTML = '✨ AI Summary Generated';
+        })
+        .catch(error => {
+            box.style.display = 'block';
+            content.innerText = 'Failed to load AI summary. Please try again later.';
+            btn.innerHTML = '✨ AI Summary';
+            btn.disabled = false;
+        });
+});
+</script>
+{% endblock %}

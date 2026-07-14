@@ -1,0 +1,67 @@
+{% extends 'base.html' %}
+
+{% block title %}Daily Job Postings | NexusJobs{% endblock %}
+
+{% block content %}
+
+{% if highlights %}
+<div style="margin-bottom: 2rem;">
+    <h3 style="color: var(--primary-color); margin-bottom: 1rem; text-align: center;">🔥 Today's Highlights</h3>
+    <div class="highlights-wrapper">
+        {% for h in highlights %}
+        <a href="{% url 'jobs:detail' h.pk %}" class="highlight-story">
+            <div class="highlight-inner">
+                <span style="color: var(--primary-color); font-size: 0.6rem; margin-bottom: 4px;">{{ h.category.name|truncatechars:15 }}</span>
+                <span>{{ h.title }}</span>
+            </div>
+        </a>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+<div class="hero">
+    <h1>Your Daily Career Opportunities</h1>
+    <p>Discover the latest jobs across government, private sector, and student internships. Updated daily to give you the edge.</p>
+</div>
+
+<div class="filters">
+    <a href="{% url 'jobs:list' %}" class="filter-btn {% if not selected_category %}active{% endif %}">All Roles</a>
+    {% for category in categories %}
+    <a href="{% url 'jobs:list' %}?category={{ category.slug }}" class="filter-btn {% if selected_category == category.slug %}active{% endif %}">
+        {{ category.name }}
+    </a>
+    {% endfor %}
+</div>
+
+<div class="job-grid">
+    {% for job in jobs %}
+    <div class="job-card">
+        <div class="job-category">{{ job.category.name }}</div>
+        <h2 class="job-title">{{ job.title }}</h2>
+        <div class="job-meta">
+            <span>
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 21V5a2 2 0 00-2-2H7a2 2 0 00-2 2v16m14 0h2m-2 0h-5m-9 0H3m2 0h5M9 7h1m-1 4h1m4-4h1m-1 4h1m-5 10v-5a1 1 0 011-1h2a1 1 0 011 1v5m-4 0h4"></path></svg>
+                {{ job.company_name|default:"Not specified" }}
+            </span>
+            <span>
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.242-4.243a8 8 0 1111.314 0z"></path><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"></path></svg>
+                {{ job.location }}
+            </span>
+            <span>
+                <svg width="16" height="16" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path></svg>
+                {{ job.vacancies }} Vacanc{{ job.vacancies|pluralize:"y,ies" }}
+            </span>
+        </div>
+        <div class="job-desc">
+            {{ job.description|truncatewords:20 }}
+        </div>
+        <a href="{% url 'jobs:detail' job.pk %}" class="btn-apply">View Details</a>
+    </div>
+    {% empty %}
+    <div style="text-align: center; grid-column: 1 / -1; padding: 3rem; background: var(--bg-card); border-radius: 12px; color: var(--text-muted);">
+        <p>No jobs found for the selected category. Check back later!</p>
+    </div>
+    {% endfor %}
+</div>
+{% endblock %}
