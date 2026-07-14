@@ -104,6 +104,13 @@ def scrape_youth_government_jobs():
             # Clean HTML out of description
             clean_desc = BeautifulSoup(description_html, 'html.parser').get_text(separator=' ')
             
+            import re
+            official_link = link
+            # Extract .gov.in or .nic.in domain if present in text
+            gov_match = re.search(r'([a-zA-Z0-9.-]+\.(?:gov\.in|nic\.in))', clean_desc, re.IGNORECASE)
+            if gov_match:
+                official_link = "https://" + gov_match.group(1).lower()
+            
             if not JobPosting.objects.filter(title=title).exists():
                 JobPosting.objects.create(
                     title=title,
@@ -111,7 +118,7 @@ def scrape_youth_government_jobs():
                     location="India",
                     category=gov_cat,
                     description=clean_desc,
-                    apply_link=link,
+                    apply_link=official_link,
                     vacancies=random.randint(50, 2500) # Govt jobs usually have high vacancies
                 )
                 count += 1
