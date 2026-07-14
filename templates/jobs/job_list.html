@@ -3,32 +3,29 @@
 {% block title %}Find Your Dream Job | NexusJobs{% endblock %}
 
 {% block content %}
-<div class="search-hero">
-    <h1>Find the perfect job for you</h1>
-    <p>Search thousands of jobs from top companies, government sectors, and startups.</p>
-    
-    <div class="search-bar">
-        <input type="text" placeholder="Job title, keywords, or company">
-        <input type="text" placeholder="City, state, or remote">
-        <button class="btn-search">Search Jobs</button>
-    </div>
-</div>
-
 {% if highlights %}
-<div class="highlights-section">
-    <h3>🔥 Trending Today</h3>
-    <div class="highlights-wrapper">
+<div class="scrolling-ticker">
+    <div class="ticker-label">📢 LATEST UPDATES:</div>
+    <marquee behavior="scroll" direction="left" scrollamount="6">
         {% for h in highlights %}
-        <a href="{% url 'jobs:detail' h.pk %}" class="highlight-story">
-            <div class="highlight-inner">
-                <span class="highlight-cat">{{ h.category.name|truncatechars:15 }}</span>
-                <span class="highlight-title">{{ h.title }}</span>
-            </div>
-        </a>
+        <span class="ticker-item"><a href="{% url 'jobs:detail' h.pk %}">🌟 {{ h.title }} ({{ h.category.name }})</a></span>
         {% endfor %}
-    </div>
+    </marquee>
 </div>
 {% endif %}
+
+<div class="search-hero">
+    <h1>Find the perfect job for you</h1>
+    <p>Search thousands of real-time jobs from top companies and government sectors.</p>
+    
+    <form class="search-bar" action="{% url 'jobs:list' %}" method="GET">
+        <input type="text" name="q" placeholder="Job title, keywords, or company..." value="{{ request.GET.q }}">
+        {% if request.GET.category %}
+        <input type="hidden" name="category" value="{{ request.GET.category }}">
+        {% endif %}
+        <button type="submit" class="btn-search">Search Jobs</button>
+    </form>
+</div>
 
 <div class="job-board-container">
     <aside class="sidebar-filters">

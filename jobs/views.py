@@ -1,5 +1,6 @@
 from django.shortcuts import render, get_object_or_404
 from django.utils import timezone
+from django.db.models import Q
 from datetime import timedelta
 from .models import JobPosting, JobCategory
 
@@ -9,15 +10,20 @@ def job_list(request):
     
     # Highlights: Jobs posted in the last 24 hours (or just top 5 latest for demo)
     twenty_four_hours_ago = timezone.now() - timedelta(days=1)
-    highlights = JobPosting.objects.filter(is_active=True, posted_at__gte=twenty_four_hours_ago).order_by('-posted_at')[:5]
-    
-    # Fallback for highlights if database is just seeded
-    if not highlights.exists():
-        highlights = JobPosting.objects.filter(is_active=True).order_by('-posted_at')[:5]
+    highlights = JobPosting.objects.filter(is_active=True).order_by('-posted_at')[:5]
     
     category_slug = request.GET.get('category')
     if category_slug:
         jobs = jobs.filter(category__slug=category_slug)
+        
+    search_query = request.GET.get('q')
+    if search_query:
+        jobs = jobs.filter(
+            Q(title__icontains=search_query) | 
+            Q(description__icontains=search_query) |
+            Q(company_name__icontains=search_query)
+        )
+
         
     context = {
         'jobs': jobs,

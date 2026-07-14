@@ -72,63 +72,54 @@ def scrape_realtime_jobs():
     print(f"Scraping complete. {count} new real-time jobs added.")
 
 def scrape_youth_government_jobs():
-    print("Fetching Government & Youth jobs from news portals...")
+    print("Fetching REAL Government & Youth jobs from news/rss portals...")
     gov_cat, _ = JobCategory.objects.get_or_create(name='Government Jobs', slug='government')
-    std_cat, _ = JobCategory.objects.get_or_create(name='Student Internships', slug='student')
     
     import random
+    import xml.etree.ElementTree as ET
     
-    youth_jobs = [
-        {
-            "title": "SSC CGL (Combined Graduate Level) Examination 2026",
-            "company": "Staff Selection Commission (SSC)",
-            "location": "All India",
-            "category": gov_cat,
-            "desc": "Official notification released for SSC CGL 2026. Looking for fresh graduates to fill various Group B and Group C posts in different Ministries/Departments/Organizations of the Government of India. Excellent opportunity for youth.",
-            "link": "https://ssc.nic.in"
-        },
-        {
-            "title": "Railway NTPC (Non-Technical Popular Categories)",
-            "company": "Indian Railways (RRB)",
-            "location": "Multiple Zones",
-            "category": gov_cat,
-            "desc": "RRB is hiring for thousands of vacancies including Station Master, Ticket Clerk, and Typist. Minimum qualification is 12th pass or Graduation. Great benefits and job security.",
-            "link": "https://indianrailways.gov.in"
-        },
-        {
-            "title": "Data Science Summer Internship",
-            "company": "Tech Startup Hub",
-            "location": "Remote",
-            "category": std_cat,
-            "desc": "We are looking for passionate college students for a 3-month paid internship in Data Science. You will work on real-world datasets and learn from industry experts. Pre-placement offer available for top performers.",
-            "link": "https://example.com/internship"
-        },
-        {
-            "title": "Probationary Officer (PO) Recruitment",
-            "company": "State Bank of India (SBI)",
-            "location": "All India",
-            "category": gov_cat,
-            "desc": "SBI is recruiting Probationary Officers. A golden opportunity for recent graduates to start a lucrative career in the banking sector. The selection process involves Prelims, Mains, and an Interview.",
-            "link": "https://sbi.co.in/careers"
-        }
-    ]
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36'
+    }
     
+    # Use FreeJobAlert RSS which tracks SSC, UPSC, State Govt, etc.
+    url = "https://www.freejobalert.com/feed/"
+    
+    try:
+        response = requests.get(url, headers=headers)
+        response.raise_for_status()
+        root = ET.fromstring(response.content)
+    except Exception as e:
+        print(f"Failed to fetch govt RSS feed: {e}")
+        return
+        
     count = 0
-    for job_data in youth_jobs:
-        if not JobPosting.objects.filter(title=job_data["title"]).exists():
-            JobPosting.objects.create(
-                title=job_data["title"],
-                company_name=job_data["company"],
-                location=job_data["location"],
-                category=job_data["category"],
-                description=job_data["desc"],
-                apply_link=job_data["link"],
-                vacancies=random.randint(10, 500)
-            )
-            count += 1
-            print(f"Added Youth Job: {job_data['title']}")
+    # Find all items in the RSS feed
+    for item in root.findall('.//item')[:15]:  # Get latest 15 Govt Jobs
+        try:
+            title = item.find('title').text
+            link = item.find('link').text
+            description_html = item.find('description').text
             
-    print(f"Youth/Govt jobs complete. {count} added.")
+            # Clean HTML out of description
+            clean_desc = BeautifulSoup(description_html, 'html.parser').get_text(separator=' ')
+            
+            if not JobPosting.objects.filter(title=title).exists():
+                JobPosting.objects.create(
+                    title=title,
+                    company_name="Government of India / State Govt",
+                    location="India",
+                    category=gov_cat,
+                    description=clean_desc,
+                    apply_link=link,
+                    vacancies=random.randint(50, 2500) # Govt jobs usually have high vacancies
+                )
+                count += 1
+                print(f"Added Govt Job: {title}")
+        except Exception as e:
+            continue
+            
+    print(f"Real Youth/Govt jobs complete. {count} added.")
 
 if __name__ == '__main__':
     scrape_realtime_jobs()

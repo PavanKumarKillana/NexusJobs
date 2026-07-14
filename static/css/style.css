@@ -112,67 +112,32 @@ header {
     background: var(--primary-hover);
 }
 
-/* Highlights Section */
-.highlights-section {
-    margin: 0 auto 3rem auto;
-    max-width: 1200px;
-    padding: 0 2rem;
-}
-
-.highlights-section h3 {
-    margin-bottom: 1rem;
-    color: var(--text-main);
-}
-
-.highlights-wrapper {
+/* Scrolling Ticker */
+.scrolling-ticker {
+    background-color: #dc2626; /* Government red alert style */
+    color: white;
     display: flex;
-    gap: 1rem;
-    overflow-x: auto;
-    padding-bottom: 1rem;
-    scrollbar-width: thin;
-}
-
-.highlight-story {
-    flex: 0 0 auto;
-    width: 160px;
-    height: 100px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, #3b82f6, #8b5cf6);
-    padding: 2px;
-    cursor: pointer;
-    transition: transform 0.2s;
-}
-
-.highlight-story:hover {
-    transform: translateY(-3px);
-}
-
-.highlight-inner {
-    background: white;
-    width: 100%;
-    height: 100%;
-    border-radius: 10px;
-    padding: 0.75rem;
-    display: flex;
-    flex-direction: column;
-}
-
-.highlight-cat {
-    font-size: 0.7rem;
-    color: var(--primary-color);
-    font-weight: 700;
-    text-transform: uppercase;
-    margin-bottom: 0.25rem;
-}
-
-.highlight-title {
-    font-size: 0.85rem;
+    align-items: center;
+    padding: 0.5rem 2rem;
+    font-size: 0.95rem;
     font-weight: 600;
-    color: var(--text-main);
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
+}
+
+.ticker-label {
+    background: #991b1b;
+    padding: 0.25rem 0.75rem;
+    border-radius: 4px;
+    margin-right: 1rem;
+    white-space: nowrap;
+    z-index: 10;
+}
+
+.ticker-item {
+    margin-right: 3rem;
+}
+
+.ticker-item a:hover {
+    text-decoration: underline;
 }
 
 /* Job Board Layout */
