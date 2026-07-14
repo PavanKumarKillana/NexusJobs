@@ -1,25 +1,23 @@
-# Django #
-*.log
-*.pot
-*.pyc
-__pycache__/
-local_settings.py
-db.sqlite3
-db.sqlite3-journal
-media
+# Environment Variables
+.env
 
-# Virtual Environment #
+# Database backups
+*.sql
+nexusjobs_db_backup.sql
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
 venv/
 env/
-ENV/
-env.bak/
-venv.bak/
+.venv/
 
-# Environment Variables #
-.env
-.venv
+# Django
+*.log
+db.sqlite3
+db.sqlite3-journal
+media/
 
-# IDE / OS #
-.vscode/
-.idea/
+# OS
 .DS_Store
