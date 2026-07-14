@@ -29,7 +29,7 @@
                 <button id="btn-ai-summary" class="btn-search" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Generate AI Summary</button>
             </div>
             <div id="ai-summary-content" style="color: #475569; font-size: 0.95rem;">
-                <p>Click the button to generate a quick 3-bullet summary of this job description using Gemini AI.</p>
+                <p>Click the button to generate a quick 3-bullet summary of this job description using our AI.</p>
             </div>
         </div>
 
@@ -49,7 +49,7 @@
         
         btn.disabled = true;
         btn.innerText = 'Generating...';
-        contentDiv.innerHTML = '<p>Analyzing job description with Gemini AI...</p>';
+        contentDiv.innerHTML = '<p>Analyzing job description with AI...</p>';
         
         fetch("{% url 'jobs:ai_summary' job.pk %}")
             .then(response => response.json())
