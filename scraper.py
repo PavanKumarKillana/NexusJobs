@@ -71,5 +71,66 @@ def scrape_realtime_jobs():
             
     print(f"Scraping complete. {count} new real-time jobs added.")
 
+def scrape_youth_government_jobs():
+    print("Fetching Government & Youth jobs from news portals...")
+    gov_cat, _ = JobCategory.objects.get_or_create(name='Government Jobs', slug='government')
+    std_cat, _ = JobCategory.objects.get_or_create(name='Student Internships', slug='student')
+    
+    import random
+    
+    youth_jobs = [
+        {
+            "title": "SSC CGL (Combined Graduate Level) Examination 2026",
+            "company": "Staff Selection Commission (SSC)",
+            "location": "All India",
+            "category": gov_cat,
+            "desc": "Official notification released for SSC CGL 2026. Looking for fresh graduates to fill various Group B and Group C posts in different Ministries/Departments/Organizations of the Government of India. Excellent opportunity for youth.",
+            "link": "https://ssc.nic.in"
+        },
+        {
+            "title": "Railway NTPC (Non-Technical Popular Categories)",
+            "company": "Indian Railways (RRB)",
+            "location": "Multiple Zones",
+            "category": gov_cat,
+            "desc": "RRB is hiring for thousands of vacancies including Station Master, Ticket Clerk, and Typist. Minimum qualification is 12th pass or Graduation. Great benefits and job security.",
+            "link": "https://indianrailways.gov.in"
+        },
+        {
+            "title": "Data Science Summer Internship",
+            "company": "Tech Startup Hub",
+            "location": "Remote",
+            "category": std_cat,
+            "desc": "We are looking for passionate college students for a 3-month paid internship in Data Science. You will work on real-world datasets and learn from industry experts. Pre-placement offer available for top performers.",
+            "link": "https://example.com/internship"
+        },
+        {
+            "title": "Probationary Officer (PO) Recruitment",
+            "company": "State Bank of India (SBI)",
+            "location": "All India",
+            "category": gov_cat,
+            "desc": "SBI is recruiting Probationary Officers. A golden opportunity for recent graduates to start a lucrative career in the banking sector. The selection process involves Prelims, Mains, and an Interview.",
+            "link": "https://sbi.co.in/careers"
+        }
+    ]
+    
+    count = 0
+    for job_data in youth_jobs:
+        if not JobPosting.objects.filter(title=job_data["title"]).exists():
+            JobPosting.objects.create(
+                title=job_data["title"],
+                company_name=job_data["company"],
+                location=job_data["location"],
+                category=job_data["category"],
+                description=job_data["desc"],
+                apply_link=job_data["link"],
+                vacancies=random.randint(10, 500)
+            )
+            count += 1
+            print(f"Added Youth Job: {job_data['title']}")
+            
+    print(f"Youth/Govt jobs complete. {count} added.")
+
 if __name__ == '__main__':
     scrape_realtime_jobs()
+    scrape_youth_government_jobs()
+

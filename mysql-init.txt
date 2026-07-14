@@ -1,0 +1,2 @@
+ALTER USER 'root'@'localhost' IDENTIFIED BY '5391';
+CREATE DATABASE IF NOT EXISTS nexusjobs_db;
