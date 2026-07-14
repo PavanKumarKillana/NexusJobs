@@ -27,25 +27,16 @@
     </form>
 </div>
 
-<div class="job-board-container">
-    <aside class="sidebar-filters">
-        <h3>Filter by Category</h3>
-        <ul class="filter-list">
-            <li>
-                <a href="{% url 'jobs:list' %}" class="{% if not selected_category %}active{% endif %}">
-                    All Jobs
-                </a>
-            </li>
-            {% for category in categories %}
-            <li>
-                <a href="{% url 'jobs:list' %}?category={{ category.slug }}" class="{% if selected_category == category.slug %}active{% endif %}">
-                    {{ category.name }}
-                </a>
-            </li>
-            {% endfor %}
-        </ul>
-    </aside>
+<div class="category-pills-container">
+    <div class="pills-scroll">
+        <a href="{% url 'jobs:list' %}" class="category-pill {% if not selected_category %}active{% endif %}">All Jobs</a>
+        {% for category in categories %}
+        <a href="{% url 'jobs:list' %}?category={{ category.slug }}" class="category-pill {% if selected_category == category.slug %}active{% endif %}">{{ category.name }}</a>
+        {% endfor %}
+    </div>
+</div>
 
+<div class="job-board-container">
     <div class="job-list-column">
         <div class="list-header">
             <h2>{{ jobs|length }} Jobs Found</h2>
