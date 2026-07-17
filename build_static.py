@@ -1,51 +1,73 @@
 import os
-import django
-from django.conf import settings
-from django.test import Client
 import shutil
+import urllib.request
+import re
 
-# Setup django
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'job_portal.settings')
-django.setup()
+# Setup paths
+base_dir = '/home/pavan/Desktop/project-1'
+docs_dir = os.path.join(base_dir, 'docs')
+static_src = os.path.join(base_dir, 'static')
+static_dest = os.path.join(docs_dir, 'static')
 
 def build():
-    # Create docs directory
-    base_dir = settings.BASE_DIR
-    docs_dir = os.path.join(base_dir, 'docs')
+    print("Building static site for GitHub Pages...")
     if not os.path.exists(docs_dir):
         os.makedirs(docs_dir)
 
     # Copy static files
-    static_src = os.path.join(base_dir, 'static')
-    static_dest = os.path.join(docs_dir, 'static')
     if os.path.exists(static_dest):
         shutil.rmtree(static_dest)
     shutil.copytree(static_src, static_dest)
 
-    # Render home page using urllib (since the server is already running on 8000)
-    import urllib.request
+    # 1. Fetch Home Page
     try:
         response = urllib.request.urlopen('http://127.0.0.1:8000/')
-        html_content = response.read().decode('utf-8')
+        index_html = response.read().decode('utf-8')
     except Exception as e:
-        print(f"Error fetching from local server (is it running?): {e}")
+        print(f"Error fetching from local server: {e}")
         return
 
-    # Fix static paths for GitHub pages (relative)
-    html_content = html_content.replace('href="/static/', 'href="static/')
-    html_content = html_content.replace('src="/static/', 'src="static/')
-    
-    # Also fix the links in the UI so they don't break or just point to #
-    import re
-    html_content = re.sub(r'href="/jobs/\d+/"', 'href="#"', html_content)
-    html_content = re.sub(r'href="\?category=[^"]+"', 'href="#"', html_content)
-    html_content = re.sub(r'href="\?q=[^"]+"', 'href="#"', html_content)
+    # Extract all job IDs to build detail pages
+    job_ids = set(re.findall(r'href="/job/(\d+)/"', index_html))
+    print(f"Found {len(job_ids)} job links to build...")
 
-    # Write index.html
+    # Fix paths in index.html (Make absolute paths relative for GitHub Pages)
+    # /static/ -> static/
+    index_html = index_html.replace('href="/static/', 'href="static/')
+    index_html = index_html.replace('src="/static/', 'src="static/')
+    # /job/1/ -> job/1/
+    index_html = re.sub(r'href="/job/(\d+)/"', r'href="job/\1/"', index_html)
+    # Disable search and filter forms
+    index_html = re.sub(r'href="\?category=[^"]+"', 'href="#"', index_html)
+    index_html = re.sub(r'href="\?q=[^"]+"', 'href="#"', index_html)
+    index_html = index_html.replace('action="/?"', 'action="#"')
+
+    # Save index.html
     with open(os.path.join(docs_dir, 'index.html'), 'w') as f:
-        f.write(html_content)
+        f.write(index_html)
 
-    print("Static build successful! Files in docs/")
+    # 2. Build Detail Pages
+    for job_id in job_ids:
+        try:
+            res = urllib.request.urlopen(f'http://127.0.0.1:8000/job/{job_id}/')
+            detail_html = res.read().decode('utf-8')
+            
+            # Fix paths for detail pages (they are 2 levels deep: /job/1/)
+            # /static/ -> ../../static/
+            detail_html = detail_html.replace('href="/static/', 'href="../../static/')
+            detail_html = detail_html.replace('src="/static/', 'src="../../static/')
+            # / -> ../../ (Home link)
+            detail_html = detail_html.replace('href="/"', 'href="../../"')
+            
+            # Create folder and save
+            job_dir = os.path.join(docs_dir, 'job', job_id)
+            os.makedirs(job_dir, exist_ok=True)
+            with open(os.path.join(job_dir, 'index.html'), 'w') as f:
+                f.write(detail_html)
+        except Exception as e:
+            print(f"Failed to build job {job_id}: {e}")
+
+    print("Static build successful! The entire site is now in docs/")
 
 if __name__ == '__main__':
     build()
