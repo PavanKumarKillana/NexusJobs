@@ -37,10 +37,12 @@ def build():
     index_html = index_html.replace('src="/static/', 'src="static/')
     # /job/1/ -> job/1/
     index_html = re.sub(r'href="/job/(\d+)/"', r'href="job/\1/"', index_html)
-    # Disable search and filter forms
-    index_html = re.sub(r'href="\?category=[^"]+"', 'href="#"', index_html)
-    index_html = re.sub(r'href="\?q=[^"]+"', 'href="#"', index_html)
-    index_html = index_html.replace('action="/?"', 'action="#"')
+    # Disable search and filter forms for static demo
+    alert_script = 'href="#" onclick="alert(\'This is a static portfolio demo! To experience real-time MySQL database filtering by state or category, please run the full Django backend locally or deploy to Render.\'); return false;"'
+    index_html = re.sub(r'href="/\?category=[^"]+"', alert_script, index_html)
+    index_html = re.sub(r'href="/\?q=[^"]+"', alert_script, index_html)
+    index_html = index_html.replace('action="/?"', 'action="#" onsubmit="alert(\'Search requires the Python backend!\'); return false;"')
+    index_html = index_html.replace('action="/', 'action="#" onsubmit="alert(\'Search requires the Python backend!\'); return false;"')
 
     # Save index.html
     with open(os.path.join(docs_dir, 'index.html'), 'w') as f:
