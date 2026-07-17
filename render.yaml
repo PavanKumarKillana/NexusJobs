@@ -9,7 +9,8 @@ services:
     name: nexusjobs-web
     env: python
     plan: free
-    buildCommand: "./build.sh"
+    buildCommand: "pip install -r requirements.txt && python manage.py collectstatic --no-input"
+    preDeployCommand: "python manage.py migrate && python manage.py shell -c \"from jobs.models import JobCategory; [JobCategory.objects.get_or_create(name=n, slug=n.lower().replace(' ', '-')) for n in ['Bank Jobs', 'Teaching Jobs', 'Railway Jobs', 'Defence Jobs', 'Tech Jobs', 'Medical Jobs', 'Freelance']]\""
     startCommand: "gunicorn job_portal.wsgi:application"
     envVars:
       - key: DATABASE_URL
@@ -22,3 +23,5 @@ services:
         value: 4
       - key: GEMINI_API_KEY
         sync: false
+      - key: PYTHON_VERSION
+        value: 3.12.0
