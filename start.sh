@@ -6,5 +6,8 @@ python manage.py migrate
 # Seed categories
 python manage.py shell -c "from jobs.models import JobCategory; [JobCategory.objects.get_or_create(name=n, slug=n.lower().replace(' ', '-')) for n in ['Bank Jobs', 'Teaching Jobs', 'Railway Jobs', 'Defence Jobs', 'Tech Jobs', 'Medical Jobs', 'Freelance']]"
 
+# Automatically scrape jobs into the new cloud database on startup
+python scraper.py
+
 # Start Gunicorn server
 exec gunicorn job_portal.wsgi:application
