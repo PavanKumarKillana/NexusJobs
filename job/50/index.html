@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mizoram PSC Exam Schedule 2026 Out: Assistant, UDC, Nursing Officer &amp; More Exam Dates | NexusJobs</title>
+    <meta name="description" content="A single daily job post platform for different genres. Find your next opportunity today.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../../static/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="../../">NexusJobs</a>
+        </div>
+        <nav>
+            <a href="../../" style="margin-right: 1.5rem;">All Jobs</a>
+            <!-- Could add AI features here or login -->
+        </nav>
+    </header>
+
+    <main class="container">
+        
+<div class="container">
+    <div class="detail-container">
+        <div class="job-card-header">
+            <h1 class="job-title-link" style="font-size: 2rem; color: #1e293b; margin-bottom: 0.5rem;">Mizoram PSC Exam Schedule 2026 Out: Assistant, UDC, Nursing Officer &amp; More Exam Dates</h1>
+            <span class="job-category-badge">Government Jobs</span>
+        </div>
+        
+        <h3 class="job-company" style="font-size: 1.25rem; color: #3b82f6; margin-bottom: 1.5rem;">Government of India / State Govt</h3>
+        
+        <div class="job-meta-row" style="border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 1rem 0; margin-bottom: 2rem;">
+            <span class="meta-item"><strong>Location:</strong> India</span>
+            <span class="meta-item"><strong>Vacancies:</strong> 1679</span>
+            <span class="meta-item"><strong>Posted:</strong> 2 days, 9 hours ago</span>
+        </div>
+
+        <div class="job-description-section" style="margin-bottom: 3rem;">
+            <h2 style="margin-bottom: 1rem; color: #0f172a;">Job Description</h2>
+            <div class="job-snippet" style="font-size: 1.05rem; line-height: 1.8; color: #334155; white-space: pre-wrap;">Mizoram PSC Exam Schedule 2026 is out. Check Assistant & UDC exams (18-21 Aug), Nursing Officer & Staff Nurse (27-28 Aug), and November exam dates.</div>
+        </div>
+
+        <div class="ai-summary-box" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="color: #0f172a; font-size: 1.2rem;">AI Assistant Summary</h3>
+                <button id="btn-ai-summary" class="btn-search" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Generate AI Summary</button>
+            </div>
+            <div id="ai-summary-content" style="color: #475569; font-size: 0.95rem;">
+                <p>Click the button to generate a quick 3-bullet summary of this job description using our AI.</p>
+            </div>
+        </div>
+
+        <div class="job-actions" style="display: flex; gap: 1rem; margin-top: 2rem;">
+            
+            <a href="https://www.freejobalert.com/articles/mizoram-psc-various-posts-exam-schedule-2026-3058416" target="_blank" class="btn-apply" style="padding: 0.75rem 2rem; font-size: 1.1rem; text-align: center;">Apply Now</a>
+            
+            <a href="../../" class="btn-secondary" style="padding: 0.75rem 2rem; font-size: 1.1rem; text-align: center; border-radius: 6px; display: inline-block;">Back to Jobs</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('btn-ai-summary').addEventListener('click', function() {
+        const contentDiv = document.getElementById('ai-summary-content');
+        const btn = this;
+        
+        btn.disabled = true;
+        btn.innerText = 'Generating...';
+        contentDiv.innerHTML = '<p>Analyzing job description with AI...</p>';
+        
+        fetch("/job/50/ai-summary/")
+            .then(response => response.json())
+            .then(data => {
+                if(data.summary) {
+                    contentDiv.innerHTML = `<div style="padding: 1rem; background: white; border-left: 4px solid #2563eb; border-radius: 4px;">${data.summary}</div>`;
+                } else {
+                    contentDiv.innerHTML = `<p style="color: #dc2626;">Error: ${data.error}</p>`;
+                }
+                btn.innerText = 'Regenerate Summary';
+                btn.disabled = false;
+            })
+            .catch(error => {
+                contentDiv.innerHTML = `<p style="color: #dc2626;">Failed to connect to AI service.</p>`;
+                btn.innerText = 'Generate AI Summary';
+                btn.disabled = false;
+            });
+    });
+</script>
+
+    </main>
+</body>
+</html>

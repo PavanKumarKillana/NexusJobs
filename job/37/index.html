@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Frontend Developer | NexusJobs</title>
+    <meta name="description" content="A single daily job post platform for different genres. Find your next opportunity today.">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="../../static/css/style.css">
+</head>
+<body>
+    <header>
+        <div class="logo">
+            <a href="../../">NexusJobs</a>
+        </div>
+        <nav>
+            <a href="../../" style="margin-right: 1.5rem;">All Jobs</a>
+            <!-- Could add AI features here or login -->
+        </nav>
+    </header>
+
+    <main class="container">
+        
+<div class="container">
+    <div class="detail-container">
+        <div class="job-card-header">
+            <h1 class="job-title-link" style="font-size: 2rem; color: #1e293b; margin-bottom: 0.5rem;">Frontend Developer</h1>
+            <span class="job-category-badge">Private Jobs</span>
+        </div>
+        
+        <h3 class="job-company" style="font-size: 1.25rem; color: #3b82f6; margin-bottom: 1.5rem;">Quinncia Inc</h3>
+        
+        <div class="job-meta-row" style="border-top: 1px solid #e2e8f0; border-bottom: 1px solid #e2e8f0; padding: 1rem 0; margin-bottom: 2rem;">
+            <span class="meta-item"><strong>Location:</strong> Worldwide</span>
+            <span class="meta-item"><strong>Vacancies:</strong> 7</span>
+            <span class="meta-item"><strong>Posted:</strong> 2 days, 9 hours ago</span>
+        </div>
+
+        <div class="job-description-section" style="margin-bottom: 3rem;">
+            <h2 style="margin-bottom: 1rem; color: #0f172a;">Job Description</h2>
+            <div class="job-snippet" style="font-size: 1.05rem; line-height: 1.8; color: #334155; white-space: pre-wrap;">(All applications will be considered ONLY through Wellfound. Please do not contact any employee of the company as no such contact/connection will be considered as an application for the job.)
+
+This posting is for a Frontend Developer, you would work alongside our team. We are a fully remote team so it does not matter which country or time zone you are in, as long as you are available from 10 AM to 1 PM (EST). We are NOT looking for part-time work, contractors, software development companies or consultants, so please only apply if you're looking for a full-time position.
+
+Quinncia is a career readiness platform that improves college student outcomes by improving students' resumes and interview skills using our AI. Quinncia allows career service to scale their offerings allowing each student to get personalized feedback on their resume and interviewing skills. With over 60% unemployment or underemployment rate recently graduated students, our goal is to integrate career readiness into the academic curriculum and make sure every student has a job within 90 days of graduation.
+
+Projects you'll be working on:
+
+We're focused on enhancing our UI and UX, as well as streamlining operations and improving our technical foundation. As a core member of the Front-End team, you will influence how we build individual features, take ownership of end to end product quality that will help make our app/website reliable We want you to focus on high-quality code and know that quality is more than just unit tests and code coverage. You would look for opportunities to automate, always package up reusable code, be constantly learning, ready to pick up new technologies, patterns, and paradigms.
+
+COOL TECH
+
+Chatbots
+
+Computer vision
+
+Data visualization
+
+Machine learning
+
+Natural language processing
+
+Video processing/conferencing
+
+Being a Frontend engineer you will need strong logical skills but also understand design patterns and ability to predict edge cases for handling different issues. You will be working with our lead designer but a good understanding of UI and UX would be needed.
+
+Requirements
+
+Front-end developer position (required tech):
+
+Profound knowledge of Javascript
+
+TypeScript
+
+Next.js
+
+Practical and recent experience with React.js
+
+Experience communicating with RESTful services
+
+Experience with testing (e.g. Jest)
+
+Experience with bundling of Javascript code (e.g. Webpack)
+
+Have deep knowledge in CSS, preprocessors (e.g. Sass)
+
+GraphQL
+
+Bonus skills:
+
+Docker
+
+Ramda
+
+Whatever else you decide - we're constantly re-evaluating our stack and tools Having prior experience with the technologies is a plus, but not mandatory for skilled candidates.
+
+PS: Please add your Github account link to your application, as it will make the evaluation process easier and more robust.
+
+
+</div>
+        </div>
+
+        <div class="ai-summary-box" style="background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; padding: 1.5rem; margin-bottom: 2rem;">
+            <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                <h3 style="color: #0f172a; font-size: 1.2rem;">AI Assistant Summary</h3>
+                <button id="btn-ai-summary" class="btn-search" style="padding: 0.5rem 1rem; font-size: 0.9rem;">Generate AI Summary</button>
+            </div>
+            <div id="ai-summary-content" style="color: #475569; font-size: 0.95rem;">
+                <p>Click the button to generate a quick 3-bullet summary of this job description using our AI.</p>
+            </div>
+        </div>
+
+        <div class="job-actions" style="display: flex; gap: 1rem; margin-top: 2rem;">
+            
+            <a href="https://remotive.com/remote-jobs/software-development/frontend-developer-2090991" target="_blank" class="btn-apply" style="padding: 0.75rem 2rem; font-size: 1.1rem; text-align: center;">Apply Now</a>
+            
+            <a href="../../" class="btn-secondary" style="padding: 0.75rem 2rem; font-size: 1.1rem; text-align: center; border-radius: 6px; display: inline-block;">Back to Jobs</a>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.getElementById('btn-ai-summary').addEventListener('click', function() {
+        const contentDiv = document.getElementById('ai-summary-content');
+        const btn = this;
+        
+        btn.disabled = true;
+        btn.innerText = 'Generating...';
+        contentDiv.innerHTML = '<p>Analyzing job description with AI...</p>';
+        
+        fetch("/job/37/ai-summary/")
+            .then(response => response.json())
+            .then(data => {
+                if(data.summary) {
+                    contentDiv.innerHTML = `<div style="padding: 1rem; background: white; border-left: 4px solid #2563eb; border-radius: 4px;">${data.summary}</div>`;
+                } else {
+                    contentDiv.innerHTML = `<p style="color: #dc2626;">Error: ${data.error}</p>`;
+                }
+                btn.innerText = 'Regenerate Summary';
+                btn.disabled = false;
+            })
+            .catch(error => {
+                contentDiv.innerHTML = `<p style="color: #dc2626;">Failed to connect to AI service.</p>`;
+                btn.innerText = 'Generate AI Summary';
+                btn.disabled = false;
+            });
+    });
+</script>
+
+    </main>
+</body>
+</html>
