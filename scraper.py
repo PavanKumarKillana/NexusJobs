@@ -94,10 +94,26 @@ def scrape_youth_government_jobs():
         return
         
     count = 0
+    # Clean up existing bad data (like proverbs) that might have leaked in
+    bad_keywords = ['proverb', 'quote', 'current affairs', 'gk', 'meaning', 'lesson', 'motivation']
+    for bad in bad_keywords:
+        JobPosting.objects.filter(title__icontains=bad).delete()
+
     # Find all items in the RSS feed
-    for item in root.findall('.//item')[:15]:  # Get latest 15 Govt Jobs
+    for item in root.findall('.//item')[:25]:  # Check more items since we are filtering
         try:
             title = item.find('title').text
+            lower_title = title.lower()
+            
+            # 1. Skip non-job posts
+            if any(bad in lower_title for bad in bad_keywords):
+                continue
+                
+            # 2. Require job-related keywords
+            valid_keywords = ['admit card', 'result', 'exam', 'recruitment', 'posts', 'vacancies', 'syllabus', 'answer key', 'notification', 'online form', 'call letter', 'job', 'psc', 'ssc', 'upsc', 'board']
+            if not any(valid in lower_title for valid in valid_keywords):
+                continue
+
             link = item.find('link').text
             description_html = item.find('description').text
             
