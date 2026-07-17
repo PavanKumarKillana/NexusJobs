@@ -52,8 +52,14 @@ def scrape_realtime_jobs():
             if 'gov' in title.lower() or 'federal' in title.lower():
                 cat = gov_cat
 
+            # Try to extract real vacancy count
+            import re
+            vacancies = 1
+            vac_match = re.search(r'(\d+)\s*(?:vacancies|posts|vacancy|post)', title + ' ' + clean_desc, re.IGNORECASE)
+            if vac_match:
+                vacancies = int(vac_match.group(1))
+
             # Check if job already exists
-            import random
             if not JobPosting.objects.filter(title=title, company_name=company).exists():
                 JobPosting.objects.create(
                     title=title,
@@ -62,7 +68,7 @@ def scrape_realtime_jobs():
                     category=cat,
                     description=clean_desc,
                     apply_link=link,
-                    vacancies=random.randint(1, 7)
+                    vacancies=vacancies
                 )
                 count += 1
                 print(f"Added Real-Time Job: {title} at {company}")
@@ -127,6 +133,12 @@ def scrape_youth_government_jobs():
             if gov_match:
                 official_link = "https://" + gov_match.group(1).lower()
             
+            # Extract actual vacancies using regex
+            vacancies = 1
+            vac_match = re.search(r'(\d+)\s*(?:vacancies|posts|vacancy|post)', title + ' ' + clean_desc, re.IGNORECASE)
+            if vac_match:
+                vacancies = int(vac_match.group(1))
+                
             if not JobPosting.objects.filter(title=title).exists():
                 JobPosting.objects.create(
                     title=title,
@@ -135,7 +147,7 @@ def scrape_youth_government_jobs():
                     category=gov_cat,
                     description=clean_desc,
                     apply_link=official_link,
-                    vacancies=random.randint(50, 2500) # Govt jobs usually have high vacancies
+                    vacancies=vacancies
                 )
                 count += 1
                 print(f"Added Govt Job: {title}")
